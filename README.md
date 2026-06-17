@@ -8,8 +8,8 @@ Built with Next.js 16 App Router, deployed on Vercel. **[Live site →](https://
 
 ## My Contributions
 
-- [ ] Production-grade multi-stage Dockerfile (Next.js standalone output)
-- [ ] CI pipeline via GitHub Actions: type-check → lint → build on every push
+- [✓] Production-grade multi-stage Dockerfile (Next.js standalone output)
+- [✓] CI pipeline via GitHub Actions: type-check → lint → build on every push
 - [ ] Security pipeline: Semgrep (SAST) + GitLeaks (secrets detection) + Trivy (container scan)
 - [ ] Fixed real vulnerabilities surfaced by the security scan
 
