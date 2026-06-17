@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: horizonrelevance
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: horizon-redis
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
