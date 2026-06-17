@@ -1,17 +1,53 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import redis from "@/lib/redis";
 import { Resend } from "resend";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json({ error: "Failed to send. Please try again." }, { status: 500 });
     }
-    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const { name, email, company, demo, message } = await req.json();
 
     if (!name || !email) {
       return NextResponse.json({ error: "Name and email are required." }, { status: 400 });
     }
+
+    try {
+      const ip =
+        req.headers.get("cf-connecting-ip") ||
+        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        "unknown";
+
+      const rateLimitKey = `contact:${ip}`;
+
+      const currentCount = await redis.get(rateLimitKey);
+      const count = Number(currentCount || 0);
+
+      if (count >= 5) {
+        return NextResponse.json(
+          {
+            error: "Too many requests. Please try again later.",
+          },
+          {
+            status: 429,
+          }
+        );
+      }
+
+      await redis.incr(rateLimitKey);
+
+      if (count === 0) {
+        await redis.expire(rateLimitKey, 3600);
+      }
+    } catch (redisError) {
+      console.error(
+        "[/api/contact] Redis unavailable, skipping rate limit:",
+        redisError
+      );
+    }
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
       from: "onboarding@resend.dev",

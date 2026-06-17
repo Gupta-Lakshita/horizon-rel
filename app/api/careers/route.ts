@@ -1,17 +1,64 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import redis from "@/lib/redis";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    // Check configuration
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json({ error: "Failed to send. Please try again." }, { status: 500 });
     }
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    // Parse request body
     const { name, email, position, message } = await req.json();
 
+    // Validate input
     if (!name || !email || !position) {
       return NextResponse.json({ error: "Name, email and position are required." }, { status: 400 });
     }
+
+    // Redis rate limiting (fail-open)
+    try {
+      const ip =
+        req.headers.get("cf-connecting-ip") ||
+        req.headers
+          .get("x-forwarded-for")
+          ?.split(",")[0]
+          ?.trim() || "unknown";
+
+      const rateLimitKey = `career:${ip}`;
+
+      const currentCount =
+        await redis.get(rateLimitKey);
+
+      const count = Number(currentCount || 0);
+
+      // Allow max 3 applications/hour/IP
+      if (count >= 3) {
+        return NextResponse.json(
+          {
+            error:
+              "Too many applications submitted. Please try again later.",
+          },
+          {
+            status: 429,
+          }
+        );
+      }
+      await redis.incr(rateLimitKey);
+
+      // Set expiry only on first request
+      if (count === 0) {
+        await redis.expire(rateLimitKey, 3600);
+      }
+    } catch (redisError) {
+      console.error(
+        "[/api/careers] Redis unavailable, skipping rate limit:",
+        redisError
+      );
+    }
+    
+    // Create Resend client
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
       from: "onboarding@resend.dev",
