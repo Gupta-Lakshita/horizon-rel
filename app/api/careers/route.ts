@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import redis from "@/lib/redis";
+import { getRedisClient } from "@/lib/redis";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,6 +18,8 @@ export async function POST(req: NextRequest) {
 
     // Redis rate limiting (fail-open)
     try {
+      const redis = await getRedisClient();
+
       const ip =
         req.headers.get("cf-connecting-ip") ||
         req.headers

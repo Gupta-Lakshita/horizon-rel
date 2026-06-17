@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import redis from "@/lib/redis";
 import { Resend } from "resend";
+import { getRedisClient } from "@/lib/redis";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+      const redis = await getRedisClient();
+      
       const ip =
         req.headers.get("cf-connecting-ip") ||
         req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||

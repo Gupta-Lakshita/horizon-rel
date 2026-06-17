@@ -1,9 +1,19 @@
 import { createClient } from "redis";
 
-const client = createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-});
+let client: ReturnType<typeof createClient> | null = null;
 
-await client.connect();
+export async function getRedisClient() {
+  if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
+    throw new Error("Redis environment variables are missing");
+  }
 
-export default client;
+  if (!client) {
+    client = createClient({
+      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+    });
+
+    await client.connect();
+  }
+
+  return client;
+}
