@@ -1,0 +1,56 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/default
+
+      - name: Run GitLeaks
+        uses: gitleaks/gitleaks-action@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t horizonrelevance:latest .
+
+      - name: Run Trivy Scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: horizonrelevance:latest
+          format: table
+          output: trivy-report.txt
+          severity: CRITICAL,HIGH,MEDIUM
+
+      - name: Create Security Summary
+        run: |
+          echo "Security Scan Completed" > security-summary.txt
+          echo "" >> security-summary.txt
+          echo "Trivy Results:" >> security-summary.txt
+          cat trivy-report.txt >> security-summary.txt
+
+      - name: Upload Security Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: |
+            trivy-report.txt
+            security-summary.txt
