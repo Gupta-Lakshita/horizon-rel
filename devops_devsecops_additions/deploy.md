@@ -1,14 +1,28 @@
-Implemented Infrastructure as Code (IaC) using Terraform to provision an AWS EC2 instance and automate deployment of the HorizonRelevance application.
+Implemented Infrastructure as Code (IaC) using Terraform to provision AWS EC2 infrastructure and automate deployment of the HorizonRelevance application.
 
-The EC2 instance is bootstrapped using a Terraform-managed `user-data` script that installs Docker and Docker Compose, then deploys the application stack as a multi-container environment consisting of:
+Created Terraform configuration to provision and bootstrap an EC2 instance through a user-data script. The bootstrap process installs Docker and Docker Compose and deploys the HorizonRelevance application stack as containers.
+
+The deployed stack consists of:
 
 * HorizonRelevance Next.js application container
-* Redis container for API rate limiting and spam protection
+* Redis container used for API rate limiting
 
-All infrastructure and deployment configuration is defined in code and committed to the repository, enabling repeatable cloud deployment through Terraform.
+The infrastructure is fully defined in code and committed to the repository, allowing the environment to be recreated consistently through Terraform.
 
-Artifacts added:
+Additionally, implemented a GitHub Actions deployment workflow that automatically builds and publishes Docker images to Docker Hub and deploys updated application versions to the EC2 environment.
 
-* Terraform configuration (`main.tf`, `outputs.tf`)
-* Automated instance bootstrap (`user-data.sh`)
-* Docker Compose-based deployment for application and Redis services
+git push
+    ↓
+GitHub Actions
+    ↓
+Build Docker Image
+    ↓
+Push Docker Hub
+    ↓
+SSH to EC2
+    ↓
+docker-compose pull
+    ↓
+docker-compose up -d
+    ↓
+New Version Live
