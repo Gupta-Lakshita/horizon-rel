@@ -25,6 +25,7 @@ services:
 
     volumes:
       - redis-data:/data
+    
+    security_opt:
+      - no-new-privileges:true
 
-volumes:
-  redis-data:
