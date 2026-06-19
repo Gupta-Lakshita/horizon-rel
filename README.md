@@ -85,3 +85,4 @@ Runs at `http://localhost:3000`. No database, no auth, no external data fetching
 - `security.yml` — Semgrep SAST, GitLeaks secrets scan, Trivy container scan
 
 **When live:** pipeline status badge will appear here.
+
