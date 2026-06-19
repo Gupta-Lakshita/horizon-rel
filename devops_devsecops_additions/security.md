@@ -19,7 +19,6 @@ After the remediation:
 * Security workflow completes successfully and uploads the security report artifact
 
 I reviewed the Trivy findings and performed vulnerability triage.
-
 The latest scan reports:
 
 * 0 Critical vulnerabilities
