@@ -18,6 +18,20 @@ After the remediation:
 * Trivy scan completes successfully
 * Security workflow completes successfully and uploads the security report artifact
 
-I also reviewed the Trivy findings and understand the distinction between Critical, High, Medium, and Low severities, as well as the significance of vulnerabilities that have a fix available versus those awaiting upstream patches.
+I reviewed the Trivy findings and performed vulnerability triage.
 
-I reviewed the Trivy results and performed an initial vulnerability triage. The scan reported 0 Critical vulnerabilities, 2 High and 8 Medium OS-package vulnerabilities in the Alpine base image, and 11 High and 3 Medium vulnerabilities in transitive Node.js dependencies. Most findings have a vendor-provided fixed version available, indicating they can be remediated through base image and dependency upgrades. The High-severity OpenSSL findings originate from Alpine packages (libcrypto3 and libssl3) rather than application code. No secrets were detected in the container image.
+The latest scan reports:
+
+* 0 Critical vulnerabilities
+* 2 High and 8 Medium vulnerabilities in Alpine OS packages
+* 11 High and 3 Medium vulnerabilities in Node package dependencies
+
+The High-severity OS findings are in OpenSSL libraries (`libcrypto3` and `libssl3`) provided by the Alpine base image. Trivy indicates fixed versions are available (`3.5.7-r0`), so these can be remediated through a base image upgrade.
+
+The Node.js findings are primarily in transitive dependencies bundled with npm (e.g., `cross-spawn`, `glob`, `minimatch`, and `tar`) rather than in the Horizon Relevance application code itself. Trivy provides fixed versions for these packages, indicating that future npm or Node image updates should reduce the remaining findings.
+
+No Critical vulnerabilities or exposed secrets were detected. I understand how to classify findings by severity, determine whether fixes are available, identify whether vulnerabilities originate from application code, transitive dependencies, or the container base image, and propose remediation actions accordingly.
+
+(Why didn't the vulnerability count go to zero?
+
+Because Trivy scans the entire container image, including Alpine Linux packages and npm bundled within the Node runtime. Many findings are inherited from upstream components rather than the Horizon Relevance application code. The appropriate remediation path is upgrading the base image and runtime dependencies as patched versions become available.)
