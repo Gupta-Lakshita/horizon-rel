@@ -10,6 +10,7 @@ import Contact from "@/components/Contact";
 export default function Home() {
   return (
     <main>
+      <h1>Deployment Test 1</h1>
       <Hero />
       <Offerings />
       <Products />
