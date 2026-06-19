@@ -21,7 +21,7 @@ const OUTPUTS = [
   { label: "Governance",   sub: "Policy enforcement",      accent: SECONDARY },
 ];
 
-function FlowParticle({ delay, color, fromX, toX }: { delay: number; color: string; fromX: string; toX: string }) {
+function FlowParticle({ delay, color }: { delay: number; color: string }) {
   return (
     <motion.div
       className="absolute rounded-full"
@@ -98,7 +98,7 @@ export default function CloudCostVisual() {
 
             {/* Connector line down to hub */}
             <div className="relative h-10 w-px" style={{ background: `linear-gradient(to bottom, ${provider.color.replace("0.9)", "0.4)")}, rgba(168,85,247,0.4))` }}>
-              <FlowParticle delay={pi * 0.55} color={provider.color} fromX="0" toX="0" />
+              <FlowParticle delay={pi * 0.55} color={provider.color} />
             </div>
           </motion.div>
         ))}

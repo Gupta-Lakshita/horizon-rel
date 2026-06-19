@@ -7,7 +7,6 @@ import { Cloud, ShieldCheck, BrainCircuit, Zap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
-const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 

@@ -274,7 +274,7 @@ export default function Solutions() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.12, ease: easeOutExpo }}
           >
-            Six core service lines — each purpose-built for teams that can't afford to slow down
+            Six core service lines — each purpose-built for teams that can&apos;t afford to slow down
             while they modernize.
           </motion.p>
         </motion.div>

@@ -6,7 +6,6 @@ import { Code2, ScanLine, GitBranch, ShieldCheck, Rocket, CheckCircle2 } from "l
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 
 const PRIMARY   = "rgba(0,185,95,1)";
-const SECONDARY = "rgba(13,148,136,1)";
 
 const LAYERS = [
   { icon: Code2,       label: "Code",     sub: "IDE + pre-commit hooks",           accent: "rgba(0,185,95,1)",    stat: "0 secrets exposed" },

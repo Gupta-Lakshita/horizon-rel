@@ -170,7 +170,7 @@ function ScenePhilosophy() {
         viewport={{ once: true, margin: "0px 0px -35% 0px" }}
         transition={{ duration: 1.45, ease: "easeOut" }}
       >
-        We don't consult from outside — we build from within.
+        We don&apos;t consult from outside — we build from within.
       </motion.h3>
 
       {/* Body — slowest fade, feels like the final word */}
@@ -182,7 +182,7 @@ function ScenePhilosophy() {
         transition={{ duration: 1.6, delay: 0.3, ease: "easeOut" }}
       >
         Engineering excellence, security-first thinking, and relentless
-        automation aren't our services. They're our operating principles.
+        automation aren&apos;t our services. They&apos;re our operating principles.
       </motion.p>
     </div>
   );

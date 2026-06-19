@@ -20,7 +20,6 @@ const SECTIONS = [
 
 type SectionId = (typeof SECTIONS)[number]["id"];
 
-const PRODUCTS_COLOR = "rgba(96,165,250,0.9)";
 
 export default function SectionIndex() {
   const pathname = usePathname();

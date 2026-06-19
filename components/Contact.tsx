@@ -214,7 +214,7 @@ function ContactForm() {
               <div>
                 <p className="text-lg font-semibold text-white/90">Message received.</p>
                 <p className="mt-1.5 text-[13px] text-white/38">
-                  We'll be in touch at {fields.email || "your inbox"} within 24 hours.
+                  We&apos;ll be in touch at {fields.email || "your inbox"} within 24 hours.
                 </p>
               </div>
               <button
@@ -430,8 +430,8 @@ export default function Contact() {
             </h2>
 
             <p className="mb-10 max-w-sm text-[14px] leading-relaxed text-white/38">
-              Whether you're scaling fast, cutting cloud costs, or hardening your security posture
-              — we'd love to hear about it.
+              Whether you&apos;re scaling fast, cutting cloud costs, or hardening your security posture
+              — we&apos;d love to hear about it.
             </p>
 
             <div
@@ -586,12 +586,12 @@ export default function Contact() {
               </p>
               <ul className="space-y-2">
                 <li>
-                  <a
+                  <Link
                     href="/#contact"
                     className="text-[12px] text-white/35 transition-colors duration-150 hover:text-white/68"
                   >
                     Contact
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a

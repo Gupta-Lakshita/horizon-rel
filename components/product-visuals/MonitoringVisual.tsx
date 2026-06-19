@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { CheckCircle2, AlertTriangle, Zap } from "lucide-react";
 
 const PRIMARY   = "rgba(245,158,11,1)";
-const SECONDARY = "rgba(234,88,12,1)";
 
 // SVG-based radial node graph
 // viewBox: 0 0 480 380

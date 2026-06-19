@@ -38,7 +38,7 @@ function alpha(color: string, a: number) {
 }
 
 export default function ProductPageTemplate({ data }: { data: ProductPageData }) {
-  const { name, tagline, hook, pill, primaryColor, secondaryColor, problem, capabilities, outcomes, cta, visual } = data;
+  const { name, tagline, hook, pill, primaryColor, secondaryColor, problem, capabilities, outcomes, visual } = data;
 
   return (
     <div
