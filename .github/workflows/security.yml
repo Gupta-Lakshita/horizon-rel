@@ -32,6 +32,31 @@ jobs:
         run: |
           docker build -t horizonrelevance:latest .
 
+      - name: Start Application
+        run: |
+          docker compose up -d
+
+      - name: Wait for Application
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3000; then
+              echo "Application is up."
+              exit 0
+            fi
+            echo "Waiting for application to start..."
+            sleep 5
+          done
+          echo "Application failed to start."
+          docker compose logs
+          exit 1
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: "http://localhost:3000"
+          report_html: zap-report.html
+          report_md: zap-report.md
+
       - name: Run Trivy Scan
         uses: aquasecurity/trivy-action@v0.35.0
         with:
@@ -44,8 +69,22 @@ jobs:
         run: |
           echo "Security Scan Completed" > security-summary.txt
           echo "" >> security-summary.txt
-          echo "Trivy Results:" >> security-summary.txt
+
+          echo "=== Semgrep ===" >> security-summary.txt
+          echo "Static Application Security Testing completed." >> security-summary.txt
+          echo "" >> security-summary.txt
+
+          echo "=== GitLeaks ===" >> security-summary.txt
+          echo "Secret scanning completed." >> security-summary.txt
+          echo "" >> security-summary.txt
+
+          echo "=== Trivy Results ===" >> security-summary.txt
           cat trivy-report.txt >> security-summary.txt
+          echo "" >> security-summary.txt
+
+          echo "=== OWASP ZAP ===" >> security-summary.txt
+          echo "Dynamic Application Security Testing completed." >> security-summary.txt
+          echo "Detailed reports: zap-report.html, zap-report.md" >> security-summary.txt
 
       - name: Upload Security Report
         uses: actions/upload-artifact@v4
@@ -54,3 +93,10 @@ jobs:
           path: |
             trivy-report.txt
             security-summary.txt
+            zap-report.html
+            zap-report.md
+
+      - name: Stop Application
+        if: always()
+        run: |
+          docker compose down
